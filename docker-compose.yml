@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   db:
+    container_name: db
     image: "postgres:13-alpine"
     restart: "always"
     env_file:
@@ -8,9 +9,15 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
   server:
+    container_name: server
     build:
       context: ./
       dockerfile: ./docker/server.Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/expense-jar
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - "8080:8080"
     expose:
