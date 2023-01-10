@@ -3,39 +3,57 @@ package com.expensejar.server.expense;
 import java.util.Date;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import com.expensejar.server.expense.dto.ExpenseDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@ToString
 @EqualsAndHashCode
 @Entity
 @Table(name = "expense")
 public class Expense {
     @Id
-    @GeneratedValue(generator = "uuid4", strategy = GenerationType.UUID)
-    // @Column(name = "uuid", insertable = false, updatable = false)
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "uuid", insertable = false, updatable = false)
     private UUID uuid;
 
+    @NotBlank(message = "Title cannot be empty")
     @Column(name = "title", nullable = false)
     private String title;
 
+    @NotBlank(message = "The company name cannot be empty")
     @Column(name = "company_name", nullable = false)
     private String companyName;
 
-    @Column(name = "created_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "UTC")
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, insertable = false)
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createdAt;
 
+    @LastModifiedDate
+    @Column(name = "created_at", nullable = false, insertable = false)
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date lastModified;
+
+    @DecimalMin(value = "0.01")
     @Column(name = "amount", nullable = false)
     private double amount;
 
@@ -50,6 +68,7 @@ public class Expense {
         this.title = expenseDTO.getTitle();
         this.companyName = expenseDTO.getCompanyName();
         this.amount = expenseDTO.getAmount();
+        this.createdAt = new Date();
     }
 
     public UUID getUUID() {
@@ -76,7 +95,7 @@ public class Expense {
         this.companyName = companyName;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     public Date getCreatedAt() {
         return createdAt;
     }
