@@ -27,13 +27,9 @@ public class ExpenseService {
         return null;
     }
 
-    public List<Expense> getMemberExpenses() {
-        try {
-            // Optional<List<Expense>> expenses = this.expenseRepository.find
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        return null;
+    public List<Expense> getExpenses() {
+        List<Expense> expenses = this.expenseRepository.findAll();
+        return expenses;
     }
 
     public Expense createExpense(ExpenseDTO expenseDTO) {
