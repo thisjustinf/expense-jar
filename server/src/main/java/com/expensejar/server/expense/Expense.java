@@ -6,13 +6,16 @@ import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.expensejar.server.expense.dto.ExpenseDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -20,18 +23,21 @@ import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
+@NoArgsConstructor
 @EqualsAndHashCode
 @Entity
 @Table(name = "expense")
+@EntityListeners(AuditingEntityListener.class)
 public class Expense {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID, generator = "uuid")
     @UuidGenerator
-    @Column(name = "uuid", insertable = false, updatable = false)
-    private UUID uuid;
+    @Column(name = "id", insertable = false, updatable = false)
+    private UUID id;
 
     @NotBlank(message = "Title cannot be empty")
     @Column(name = "title", nullable = false)
@@ -42,13 +48,13 @@ public class Expense {
     private String companyName;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false, insertable = false)
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false, columnDefinition = "timestamp not null default current_timestamp")
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createdAt;
 
     @LastModifiedDate
-    @Column(name = "created_at", nullable = false, insertable = false)
+    @Column(name = "last_modified", nullable = false, insertable = false, columnDefinition = "timestamp not null default current_timestamp")
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date lastModified;
@@ -71,13 +77,13 @@ public class Expense {
         this.createdAt = new Date();
     }
 
-    public UUID getUUID() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
-    public void setUUID(UUID uuid) {
-        this.uuid = uuid;
-    }
+    // public void setUUID(UUID uuid) {
+    // this.uuid = uuid;
+    // }
 
     public String getTitle() {
         return title;
@@ -100,9 +106,9 @@ public class Expense {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+    // public void setCreatedAt(Date createdAt) {
+    // this.createdAt = createdAt;
+    // }
 
     public double getAmount() {
         return amount;
