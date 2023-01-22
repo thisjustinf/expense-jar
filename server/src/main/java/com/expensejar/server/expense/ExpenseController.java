@@ -27,10 +27,6 @@ public class ExpenseController {
     @Autowired
     private ExpenseService expenseService;
 
-    public ExpenseController(ExpenseService expenseService) {
-        this.expenseService = expenseService;
-    }
-
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/create", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ExpenseCreateDTO> createExpense(@RequestBody(required = true) ExpenseDTO expense) {
