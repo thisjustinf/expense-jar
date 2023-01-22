@@ -32,6 +32,11 @@ public class ExpenseService {
         return expenses;
     }
 
+    public List<Expense> getExpensesByCompanyName(String companyName) {
+        List<Expense> expenses = this.expenseRepository.findByCompanyName(companyName);
+        return expenses;
+    }
+
     public Expense createExpense(ExpenseDTO expenseDTO) {
         try {
             Expense expense = new Expense(expenseDTO.getTitle(), expenseDTO.getCompanyName(), expenseDTO.getAmount());
