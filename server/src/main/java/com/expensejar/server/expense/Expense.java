@@ -3,7 +3,6 @@ package com.expensejar.server.expense;
 import java.util.Date;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,20 +21,21 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-@ToString
 @NoArgsConstructor
-@EqualsAndHashCode
 @Entity
+@Data
+@AllArgsConstructor
+@Builder
 @Table(name = "expense")
 @EntityListeners(AuditingEntityListener.class)
 public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID, generator = "uuid")
-    @UuidGenerator
     @Column(name = "id", insertable = false, updatable = false)
     private UUID id;
 
@@ -77,44 +77,4 @@ public class Expense {
         this.createdAt = new Date();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    // public void setUUID(UUID uuid) {
-    // this.uuid = uuid;
-    // }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    @Temporal(TemporalType.DATE)
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    // public void setCreatedAt(Date createdAt) {
-    // this.createdAt = createdAt;
-    // }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
 }
